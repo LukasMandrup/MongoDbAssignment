@@ -4,18 +4,31 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Handin2
 {
     public class Chairman
     {
+	    [BsonId]
+	    public string Id { get; set; }
+	    
+	    [BsonElement("PersonalInformation")]
         public string PersonalInformation { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        [Key]
-        public string CPR { get; set; }
+	    
+	    [BsonElement("FirstName")]
+	    public string FirstName { get; set; }
+	    
+	    [BsonElement("LastName")]
+	    public string LastName { get; set; }
+	    
+	    [BsonElement("CPR")]
+	    public string CPR { get; set; }
 
-        public string Address { get; set; }
-        public List<Society> Societies { get; set; }
+	    [BsonElement("Address")]
+	    public string Address { get; set; }
+	    
+	    [BsonElement("Societies")]
+	    public IList<Society> Societies { get; set; }
     }
 }

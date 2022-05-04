@@ -1,30 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Security.AccessControl;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Handin2
 {
     public class Booking
     {
+	    [BsonId]
         public int Id { get; set; }
-        [NotMapped]
+
+	    [BsonElement("StartTime")]
         public DateTime StartTime { get; set; }
-
-        public DateTime EndTime { get; set; }
-        public Member Member { get; set; }
-        public int MemberId { get; set; }
-        public Society Society { get; set; }
-        [ForeignKey("Society")]
-        public string CVR { get; set; }
-        public Room Room { get; set; }
-        public int RoomId { get; set; }
-        public Location Location { get; set; }
-        [ForeignKey("Location")]
-        public string LocationNameFK { get; set; }
-
+	    [BsonElement("EndTime")]
+	    public DateTime EndTime { get; set; }
+	    [BsonElement("Member")]
+	    public Member? Member { get; set; }
+	    [BsonElement("Society")]
+	    public Society? Society { get; set; }
+	    [BsonElement("Room")]
+	    public Room? Room { get; set; }
+	    [BsonElement("Location")]
+	    public Location? Location { get; set; }
     }
 }

@@ -1,12 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson.Serialization.Attributes;
 
 namespace MongoDbAssignment.Models
 {
     public class Booking
     {
 	    [BsonId]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
 	    [BsonElement("StartTime")]
         public DateTime StartTime { get; set; }

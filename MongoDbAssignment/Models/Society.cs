@@ -33,5 +33,9 @@ namespace MongoDbAssignment.Models
 	    
 	    [BsonElement("KeyResponsible")]
 	    public KeyResponsible? KeyResponsible { get; set; }
+	    
+	    //Reference
+	    [BsonElement("KeyResponsible")]
+	    public int MunicipalityId { get; set; }
     }
 }

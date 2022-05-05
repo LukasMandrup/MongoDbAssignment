@@ -9,11 +9,5 @@ namespace MongoDbAssignment.Models
      
 	    [BsonElement("Name")]
         public string Name { get; set; }
-
-        [BsonElement("Locations")]
-        public List<Location> Locations { get; set; }
-
-        [BsonElement("Societies")]
-        public List<Society> Societies { get; set; }
     }
 }

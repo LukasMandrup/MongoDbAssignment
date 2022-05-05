@@ -1,20 +1,22 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace MongoDbAssignment.Models;
 
 public class KeyResponsible
 {
 	[BsonId]
-	public int Id { get; set; }
+	[BsonRepresentation(BsonType.ObjectId)]
+	public string Id { get; set; }
 	
 	[BsonElement("Member")]
-	public int? Member { get; set; }
+	public string? Member { get; set; }
 
 	[BsonElement("Chairman")]
-	public int? Chairman { get; set; }
+	public string? Chairman { get; set; }
 	
 	[BsonElement("Society")]
-	public int? Society { get; set; }
+	public string? Society { get; set; }
 
 	[BsonElement("HomeAddress")]
 	public string HomeAddress { get; set; }
@@ -26,5 +28,5 @@ public class KeyResponsible
 	public string PassportNumber { get; set; }
 
 	[BsonElement("Location")]
-	public List<int> LocationIds { get; set; }
+	public List<string> LocationIds { get; set; }
 }

@@ -1,23 +1,25 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace MongoDbAssignment.Models
 {
     public class Booking
     {
 	    [BsonId]
-        public int Id { get; set; }
+	    [BsonRepresentation(BsonType.ObjectId)]
+	    public string Id { get; set; }
 
 	    [BsonElement("StartTime")]
         public DateTime StartTime { get; set; }
 	    [BsonElement("EndTime")]
 	    public DateTime EndTime { get; set; }
 	    [BsonElement("Member")]
-	    public int? Member { get; set; }
+	    public string? Member { get; set; }
 	    [BsonElement("Society")]
-	    public int? Society { get; set; }
+	    public string? Society { get; set; }
 	    [BsonElement("Room")]
-	    public int? Room { get; set; }
+	    public string? Room { get; set; }
 	    [BsonElement("Location")]
-	    public int? Location { get; set; }
+	    public string? Location { get; set; }
     }
 }

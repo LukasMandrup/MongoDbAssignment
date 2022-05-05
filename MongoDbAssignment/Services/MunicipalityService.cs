@@ -8,6 +8,9 @@ public class MunicipalityService
     
     private readonly string connectionString = "mongodb://localhost:27017";
     private readonly string municipalityDb = "MunicipalityDb";
+    
+    private readonly IMongoDatabase _database;
+    
     private readonly IMongoCollection<Booking> _bookings;
     private readonly IMongoCollection<Chairman> _chairmen;
     private readonly IMongoCollection<Location> _locations;
@@ -20,15 +23,30 @@ public class MunicipalityService
     public MunicipalityService()
     {
         var client = new MongoClient(connectionString);
-        var database = client.GetDatabase(municipalityDb);
-        _bookings = database.GetCollection<Booking>("Bookings");
-        _chairmen = database.GetCollection<Chairman>("Chairmen");
-        _locations = database.GetCollection<Location>("Locations");
-        _members = database.GetCollection<Member>("Members");
-        _municipalities = database.GetCollection<Municipality>("Municipalities");
-        _rooms = database.GetCollection<Room>("Rooms");
-        _societies = database.GetCollection<Society>("Societies");
-        _keyResponsible = database.GetCollection<KeyResponsible>("KeyResponsible");
+        _database = client.GetDatabase(municipalityDb);
+
+        DropDatabase();
+
+        _bookings = _database.GetCollection<Booking>("Bookings");
+        _chairmen = _database.GetCollection<Chairman>("Chairmen");
+        _locations = _database.GetCollection<Location>("Locations");
+        _members = _database.GetCollection<Member>("Members");
+        _municipalities = _database.GetCollection<Municipality>("Municipalities");
+        _rooms = _database.GetCollection<Room>("Rooms");
+        _societies = _database.GetCollection<Society>("Societies");
+        _keyResponsible = _database.GetCollection<KeyResponsible>("KeyResponsible");
+    }
+
+    private void DropDatabase()
+    {
+	    _database.DropCollection("Bookings");
+	    _database.DropCollection("Chairmen");
+	    _database.DropCollection("Locations");
+	    _database.DropCollection("Members");
+	    _database.DropCollection("Municipalities");
+	    _database.DropCollection("Rooms");
+	    _database.DropCollection("Societies");
+	    _database.DropCollection("KeyResponsible");
     }
 
     public void InsertDummyData()
@@ -58,30 +76,6 @@ public class MunicipalityService
 			PersonalInformation = "cdrakes0@plala.or.jp"
 		};
 
-		Console.WriteLine("Inserting Society");
-		var fodbold = new Society
-		{
-			CVR = "4410893880",
-			Activity = "Fodbold",
-			Address = "Vejlebæksvej 25",
-			Chairman = lone,
-			Name = "Vejlebæk FC",
-			Municipality = aarhus.Id
-		};
-
-		var kommunistPartiet = new Society
-		{
-			CVR = "8925973971",
-			Activity = "Konferrence",
-			Address = "Mellemvej 58",
-			Chairman = kevin,
-			Name = "Kommunist Partiet",
-			Municipality = aarhus.Id
-		};
-
-		_societies.InsertOne(fodbold);
-		_societies.InsertOne(kommunistPartiet);
-		
 		var key1 = new Key
 		{
 			PickUpLocation = "Samsø"
@@ -101,7 +95,8 @@ public class MunicipalityService
 			Properties = "indedørs",
 			Purpose = "Undervisning, Konfererencer",
 			MunicipalityId = aarhus.Id,
-			Address = "Clematisvænget 92"
+			Address = "Clematisvænget 92",
+			KeyId = new List<string> { key1.Id }
 		};
 
 		var fodboldBane = new Location
@@ -112,11 +107,11 @@ public class MunicipalityService
 			Properties = "udendørs, fodboldmål, fodbolde",
 			Purpose = "Fodbold, Græsplæne",
 			MunicipalityId = aarhus.Id,
-			Address = "Hulemosevej 67"
+			Address = "Hulemosevej 67",
+			KeyId = new List<string> { key2.Id }
 		};
 
-		_locations.InsertOne(au);
-		_locations.InsertOne(fodboldBane);
+		_locations.InsertMany(new List<Location> { au, fodboldBane });
 		
 		Console.WriteLine("Inserting Rooms");
 		var auditorium = new Room
@@ -155,6 +150,32 @@ public class MunicipalityService
 
 		_members.InsertOne(lionel);
 		_members.InsertOne(rachel);
+		
+		Console.WriteLine("Inserting Societies");
+		var fodbold = new Society
+		{
+			CVR = "4410893880",
+			Activity = "Fodbold",
+			Address = "Vejlebæksvej 25",
+			Chairman = lone,
+			Name = "Vejlebæk FC",
+			Municipality = aarhus.Id,
+			Members = new List<string> { lionel.Id, rachel.Id },
+		};
+
+		var kommunistPartiet = new Society
+		{
+			CVR = "8925973971",
+			Activity = "Konferrence",
+			Address = "Mellemvej 58",
+			Chairman = kevin,
+			Name = "Kommunist Partiet",
+			Municipality = aarhus.Id,
+			Members = new List<string> { lionel.Id }
+		};
+
+		_societies.InsertOne(fodbold);
+		_societies.InsertOne(kommunistPartiet);
 
 		Console.WriteLine("Inserting Bookings");
 		var b1 = new Booking

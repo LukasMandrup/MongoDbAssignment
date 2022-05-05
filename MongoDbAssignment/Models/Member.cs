@@ -1,4 +1,5 @@
 ﻿
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace MongoDbAssignment.Models
@@ -6,7 +7,8 @@ namespace MongoDbAssignment.Models
     public class Member
     {
 		[BsonId]
-		public int Id { get; set; }
+		[BsonRepresentation(BsonType.ObjectId)]
+		public string Id { get; set; }
     
 		[BsonElement("FirstName")]
 		public string FirstName { get; set; }
@@ -14,6 +16,6 @@ namespace MongoDbAssignment.Models
 		public string LastName { get; set; }
 
 		[BsonElement("Societies")]
-		public IList<int> Societies { get; set; }
+		public IList<string> Societies { get; set; }
     }
 }

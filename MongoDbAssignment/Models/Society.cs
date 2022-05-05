@@ -1,11 +1,13 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace MongoDbAssignment.Models
 {
     public class Society
     {
 	    [BsonId]
-	    public int Id { get; set; }
+	    [BsonRepresentation(BsonType.ObjectId)]
+	    public string Id { get; set; }
 	    
 	    [BsonElement("CVR")]
 	    public string CVR { get; set; }
@@ -20,13 +22,13 @@ namespace MongoDbAssignment.Models
 	    public string Name { get; set; }
 
 	    [BsonElement("Municipality")]
-	    public int Municipality { get; set; }
+	    public string Municipality { get; set; }
 	    
 	    [BsonElement("Chairman")]
 	    public Chairman Chairman { get; set; }
 
 	    [BsonElement("Members")]
-	    public IList<int> Members { get; set; }
+	    public IList<string> Members { get; set; }
 
 	    [BsonElement("KeyResponsible")]
 	    public int? KeyResponsible { get; set; }

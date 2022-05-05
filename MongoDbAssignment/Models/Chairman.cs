@@ -1,11 +1,13 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace MongoDbAssignment.Models
 {
     public class Chairman
     {
 	    [BsonId]
-	    public int Id { get; set; }
+	    [BsonRepresentation(BsonType.ObjectId)]
+	    public string Id { get; set; }
 	    
 	    [BsonElement("PersonalInformation")]
         public string PersonalInformation { get; set; }

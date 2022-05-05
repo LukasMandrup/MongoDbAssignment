@@ -1,11 +1,13 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace MongoDbAssignment.Models
 {
     public class Location
     {
 	    [BsonId]
-	    public int Id { get; set; }
+	    [BsonRepresentation(BsonType.ObjectId)]
+	    public string Id { get; set; }
 	    
 	    [BsonElement("Address")]
 	    public string Address { get; set; }
@@ -26,14 +28,14 @@ namespace MongoDbAssignment.Models
 	    public string Purpose { get; set; }
 
 	    [BsonElement("KeyResponsible")]
-	    public IList<int> KeyResponsibleIds { get; set; }
+	    public IList<string> KeyResponsibleIds { get; set; }
 	    
 	    //Reference
 	    [BsonElement("Municipality")]
-	    public int MunicipalityId { get; set; }
+	    public string MunicipalityId { get; set; }
 	    
 	    //Embedded
 	    [BsonElement("KeyId")]
-	    public List<int> KeyId { get; set; }
+	    public List<string> KeyId { get; set; }
     }
 }

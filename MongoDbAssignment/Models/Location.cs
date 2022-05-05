@@ -24,9 +24,6 @@ namespace MongoDbAssignment.Models
 	    
 	    [BsonElement("Purpose")]
 	    public string Purpose { get; set; }
-        
-	    [BsonElement("Rooms")]
-	    public IList<Room> Rooms { get; set; }
 
 	    [BsonElement("KeyResponsible")]
 	    public IList<int> KeyResponsibleIds { get; set; }

@@ -14,6 +14,6 @@ namespace MongoDbAssignment.Models
 		public string LastName { get; set; }
 
 		[BsonElement("Societies")]
-		public IList<Society> Societies { get; set; }
+		public IList<int> Societies { get; set; }
     }
 }

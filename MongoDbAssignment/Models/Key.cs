@@ -5,7 +5,7 @@ namespace MongoDbAssignment.Models;
 public class Key
 {
 	[BsonId]
-	public string Id { get; set; }
+	public int Id { get; set; }
 	
 	[BsonElement("PickUpLocation")]
 	public string PickUpLocation { get; set; }

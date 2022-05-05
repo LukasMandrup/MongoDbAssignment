@@ -5,7 +5,7 @@ namespace MongoDbAssignment.Models
     public class Chairman
     {
 	    [BsonId]
-	    public string Id { get; set; }
+	    public int Id { get; set; }
 	    
 	    [BsonElement("PersonalInformation")]
         public string PersonalInformation { get; set; }

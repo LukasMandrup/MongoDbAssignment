@@ -20,6 +20,6 @@ namespace MongoDbAssignment.Models
 	    public string Name { get; set; }
         
 	    [BsonElement("Location")]
-	    public Location Location { get; set; }
+	    public int Location { get; set; }
     }
 }

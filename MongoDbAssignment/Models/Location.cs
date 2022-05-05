@@ -5,7 +5,7 @@ namespace MongoDbAssignment.Models
     public class Location
     {
 	    [BsonId]
-	    public string Id { get; set; }
+	    public int Id { get; set; }
 	    
 	    [BsonElement("Address")]
 	    public string Address { get; set; }
@@ -17,7 +17,7 @@ namespace MongoDbAssignment.Models
 	    public string Name { get; set; }
         
 	    [BsonElement("AccessKey")]
-	    public int AccessKey { get; set; }
+	    public int AccessCode { get; set; }
 	    
 	    [BsonElement("Properties")]
 	    public string Properties { get; set; }
@@ -33,6 +33,7 @@ namespace MongoDbAssignment.Models
 	    public int MunicipalityId { get; set; }
 	    
 	    //Embedded
-	    public List<Key> KeyId { get; set; }
+	    [BsonElement("KeyId")]
+	    public List<int> KeyId { get; set; }
     }
 }

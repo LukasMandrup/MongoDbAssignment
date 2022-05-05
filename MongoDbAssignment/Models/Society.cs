@@ -5,7 +5,7 @@ namespace MongoDbAssignment.Models
     public class Society
     {
 	    [BsonId]
-	    public string Id { get; set; }
+	    public int Id { get; set; }
 	    
 	    [BsonElement("CVR")]
 	    public string CVR { get; set; }
@@ -20,22 +20,18 @@ namespace MongoDbAssignment.Models
 	    public string Name { get; set; }
 
 	    [BsonElement("Municipality")]
-	    public Municipality Municipality { get; set; }
+	    public int Municipality { get; set; }
 	    
 	    [BsonElement("Chairman")]
 	    public Chairman Chairman { get; set; }
 
 	    [BsonElement("Members")]
-	    public IList<Member> Members { get; set; }
+	    public IList<int> Members { get; set; }
 
 	    [BsonElement("KeyResponsible")]
-	    public KeyResponsible? KeyResponsible { get; set; }
-	    
-	    //Reference
-	    [BsonElement("KeyResponsible")]
-	    public int MunicipalityId { get; set; }
-	    
-	    [BsonElement("KeyResponsible")]
+	    public int? KeyResponsible { get; set; }
+
+	    [BsonElement("ChairmanId")]
 	    public int ChairmanId { get; set; }
     }
 }

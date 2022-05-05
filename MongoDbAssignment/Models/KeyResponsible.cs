@@ -8,13 +8,13 @@ public class KeyResponsible
 	public int Id { get; set; }
 	
 	[BsonElement("Member")]
-	public Member? Member { get; set; }
+	public int? Member { get; set; }
 
 	[BsonElement("Chairman")]
-	public Chairman? Chairman { get; set; }
+	public int? Chairman { get; set; }
 	
 	[BsonElement("Society")]
-	public Society? Society { get; set; }
+	public int? Society { get; set; }
 
 	[BsonElement("HomeAddress")]
 	public string HomeAddress { get; set; }

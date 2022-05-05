@@ -9,6 +9,4 @@ public class Key
 	
 	[BsonElement("PickUpLocation")]
 	public string PickUpLocation { get; set; }
-	[BsonElement("Location")]
-	public Location? Location { get; set; }
 }

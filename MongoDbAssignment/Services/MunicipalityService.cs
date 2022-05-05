@@ -244,30 +244,16 @@ public class MunicipalityService
 		    Console.WriteLine($"{location.Name}");
 	    }
 
-	    var rooms = new List<Room>();
-	    
 	    _rooms.Find(new BsonDocument()).ToList().ForEach(room =>
 	    {
 		    locationsInMunicipality.ForEach(location =>
 		    {
 			    if (location.Id == room.Location)
 			    {
-				    rooms.Add(room);
+				    Console.WriteLine($"{room.Name} at address {location.Address}");
 			    }
 		    });
 	    });
-	    
-	    
-	    if (!rooms.Any())
-	    {
-		    Console.WriteLine($"No rooms found in {municipalityName}");
-		    return;
-	    }
-	    
-	    foreach (var room in rooms)
-	    {
-		    Console.WriteLine($"{room.Name}");
-	    }
     }
     
 }

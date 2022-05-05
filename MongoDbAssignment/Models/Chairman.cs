@@ -22,7 +22,5 @@ namespace MongoDbAssignment.Models
 	    [BsonElement("Address")]
 	    public string Address { get; set; }
 	    
-	    [BsonElement("Societies")]
-	    public IList<Society> Societies { get; set; }
     }
 }

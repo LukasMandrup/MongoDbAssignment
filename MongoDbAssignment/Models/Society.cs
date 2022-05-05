@@ -25,11 +25,11 @@ namespace MongoDbAssignment.Models
 	    [BsonElement("Chairman")]
 	    public Chairman Chairman { get; set; }
 
-	    [BsonElement("SocietyMembers")]
-	    public List<SocietyMember> SocietyMembers { get; set; }
+	    [BsonElement("Members")]
+	    public IList<Member> Members { get; set; }
         
 	    [BsonElement("Bookings")]
-	    public List<Booking> Bookings { get; set; }
+	    public IList<Booking> Bookings { get; set; }
 	    
 	    [BsonElement("KeyResponsible")]
 	    public KeyResponsible? KeyResponsible { get; set; }

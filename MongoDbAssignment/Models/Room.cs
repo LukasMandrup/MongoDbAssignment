@@ -21,8 +21,5 @@ namespace MongoDbAssignment.Models
         
 	    [BsonElement("Location")]
 	    public Location Location { get; set; }
-	    
-        [BsonElement("Bookings")]
-        public List<Booking> Bookings { get; set; }
     }
 }

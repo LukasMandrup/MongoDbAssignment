@@ -13,7 +13,7 @@ namespace MongoDbAssignment.Models
         [BsonElement("Locations")]
         public List<Location> Locations { get; set; }
 
-        [BsonElement("Societ")]
+        [BsonElement("Societies")]
         public List<Society> Societies { get; set; }
     }
 }

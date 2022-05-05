@@ -12,12 +12,10 @@ namespace MongoDbAssignment.Models
 		public string FirstName { get; set; }
 		[BsonElement("LastName")]
 		public string LastName { get; set; }
-		[BsonElement("MemberId")]
-		public int MemberId { get; set; }
 
-		[BsonElement("SocietyMembers")]
-		public List<SocietyMember> SocietyMembers { get; set; }
+		[BsonElement("Societies")]
+		public IList<Society> Societies { get; set; }
 		[BsonElement("Bookings")]
-		public List<Booking> Bookings { get; set; }
+		public IList<Booking> Bookings { get; set; }
     }
 }

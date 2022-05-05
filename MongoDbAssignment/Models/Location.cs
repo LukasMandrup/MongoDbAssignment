@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Handin2
+namespace MongoDbAssignment.Models
 {
     public class Location
     {

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Handin2
+namespace MongoDbAssignment.Models
 {
     public class Booking
     {

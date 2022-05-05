@@ -15,7 +15,6 @@ public class MunicipalityService
     private readonly IMongoCollection<Municipality> _municipalities;
     private readonly IMongoCollection<Room> _rooms;
     private readonly IMongoCollection<Society> _societies;
-    private readonly IMongoCollection<SocietyMember> _societyMembers;
 
     public MunicipalityService()
     {
@@ -28,6 +27,7 @@ public class MunicipalityService
         _municipalities = database.GetCollection<Municipality>("Municipalities");
         _rooms = database.GetCollection<Room>("Rooms");
         _societies = database.GetCollection<Society>("Societies");
-        _societyMembers = database.GetCollection<SocietyMember>("SocietyMembers");
     }
+    
+    
 }

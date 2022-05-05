@@ -29,7 +29,7 @@ namespace MongoDbAssignment.Models
 	    public IList<Room> Rooms { get; set; }
 
 	    [BsonElement("KeyResponsible")]
-	    public IList<KeyResponsible> KeyResponsible { get; set; }
+	    public IList<int> KeyResponsibleIds { get; set; }
 	    
 	    //Reference
 	    [BsonElement("Municipality")]

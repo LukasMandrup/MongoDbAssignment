@@ -26,5 +26,5 @@ public class KeyResponsible
 	public string PassportNumber { get; set; }
 
 	[BsonElement("Location")]
-	public List<Location> KeyResponsibleLocations { get; set; }
+	public List<int> LocationIds { get; set; }
 }

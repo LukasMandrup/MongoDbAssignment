@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using MongoDbAssignment.Models;
 
 namespace MongoDbAssignment.Services;
@@ -191,4 +192,16 @@ public class MunicipalityService
 		Console.WriteLine("Done inserting");
     }
     
+    public List<string> QueryMunicipalities(int municipalityId)
+    {
+	    var locations = _locations.Find(l => l.MunicipalityId == municipalityId);
+	    
+
+
+
+	    return db.Rooms
+		    .Where(room => room.Location.Municipality.Name.StartsWith(municipalityName))
+		    .Select(room => room.Location.Address)
+		    .ToList();
+    }
 }

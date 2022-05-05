@@ -28,9 +28,6 @@ namespace MongoDbAssignment.Models
 	    [BsonElement("Rooms")]
 	    public IList<Room> Rooms { get; set; }
 
-	    [BsonElement("Bookings")]
-	    public IList<Booking> Bookings { get; set; }
-	    
 	    [BsonElement("KeyResponsible")]
 	    public IList<KeyResponsible> KeyResponsible { get; set; }
 	    

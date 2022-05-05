@@ -34,7 +34,11 @@ namespace MongoDbAssignment.Models
 	    [BsonElement("KeyResponsible")]
 	    public IList<KeyResponsible> KeyResponsible { get; set; }
 	    
+	    //Reference
 	    [BsonElement("Municipality")]
-	    public Municipality Municipality { get; set; }
+	    public int MunicipalityId { get; set; }
+	    
+	    //Embedded
+	    public List<Key> KeyId { get; set; }
     }
 }

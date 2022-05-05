@@ -32,7 +32,7 @@ namespace MongoDbAssignment.Models
 	    
 	    //Reference
 	    [BsonElement("Municipality")]
-	    public string MunicipalityId { get; set; }
+	    public string Municipality { get; set; }
 	    
 	    //Embedded
 	    [BsonElement("KeyId")]

@@ -11,5 +11,10 @@ namespace MongoDbAssignment.Models
      
 	    [BsonElement("Name")]
         public string Name { get; set; }
+
+	    public override string ToString()
+	    {
+		    return "Municipality: " + Name + " Id: " + Id;
+	    }
     }
 }

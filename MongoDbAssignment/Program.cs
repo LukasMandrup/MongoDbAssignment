@@ -2,8 +2,9 @@
 
 using MongoDbAssignment.Services;
 
-Console.WriteLine("Hello, World!");
+Console.WriteLine("Starting up...");
 
 var service = new MunicipalityService();
 
 service.InsertDummyData();
+service.QueryMunicipalities("Aarhus");

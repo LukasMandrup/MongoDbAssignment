@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using System.Collections.Immutable;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDbAssignment.Models;
 
@@ -40,6 +41,8 @@ public class MunicipalityService
 
     private void DropDatabase()
     {
+	    Console.WriteLine("Dropping database...\n");
+
 	    _database.DropCollection("Bookings");
 	    _database.DropCollection("Chairmen");
 	    _database.DropCollection("Locations");
@@ -95,7 +98,7 @@ public class MunicipalityService
 			AccessCode = 8102403,
 			Properties = "indedørs",
 			Purpose = "Undervisning, Konfererencer",
-			MunicipalityId = aarhus.Id,
+			Municipality = aarhus.Id,
 			Address = "Clematisvænget 92",
 			KeyId = new List<string> { key1.Id }
 		};
@@ -107,7 +110,7 @@ public class MunicipalityService
 			AccessCode = 1238581,
 			Properties = "udendørs, fodboldmål, fodbolde",
 			Purpose = "Fodbold, Græsplæne",
-			MunicipalityId = aarhus.Id,
+			Municipality = aarhus.Id,
 			Address = "Hulemosevej 67",
 			KeyId = new List<string> { key2.Id }
 		};
@@ -210,19 +213,61 @@ public class MunicipalityService
 
 		_keyResponsible.InsertOne(kr1);
 
-		Console.WriteLine("Done inserting");
+		Console.WriteLine("\nDone inserting");
     }
     
-    public List<string> QueryMunicipalities(int municipalityId)
+    
+    public void QueryMunicipalities(string municipalityName)
     {
-	    var locations = _locations.Find(l => l.MunicipalityId == municipalityId);
+	    Console.WriteLine("\nQuerying municipalities...\n");
 	    
+	    var municipalityFilter = Builders<Municipality>.Filter.Eq("Name", municipalityName);
+	    var municipality = _municipalities.Find(municipalityFilter).FirstOrDefault();
+	    
+	    if (municipality == null)
+	    {
+		    Console.WriteLine($"Municipality {municipalityName} not found");
+		    return;
+	    }
+	    
+	    var locationFilter = Builders<Location>.Filter.Eq("Municipality", municipality.Id);
+	    var locationsInMunicipality = _locations.Find(locationFilter).ToList();
 
+	    if (!locationsInMunicipality.Any())
+	    {
+		    Console.WriteLine($"No locations found in {municipalityName}");
+		    return;
+	    }
 
+	    foreach (var location in locationsInMunicipality)
+	    {
+		    Console.WriteLine($"{location.Name}");
+	    }
 
-	    return db.Rooms
-		    .Where(room => room.Location.Municipality.Name.StartsWith(municipalityName))
-		    .Select(room => room.Location.Address)
-		    .ToList();
+	    var rooms = new List<Room>();
+	    
+	    _rooms.Find(new BsonDocument()).ToList().ForEach(room =>
+	    {
+		    locationsInMunicipality.ForEach(location =>
+		    {
+			    if (location.Id == room.Location)
+			    {
+				    rooms.Add(room);
+			    }
+		    });
+	    });
+	    
+	    
+	    if (!rooms.Any())
+	    {
+		    Console.WriteLine($"No rooms found in {municipalityName}");
+		    return;
+	    }
+	    
+	    foreach (var room in rooms)
+	    {
+		    Console.WriteLine($"{room.Name}");
+	    }
     }
+    
 }

@@ -14,11 +14,9 @@ public class MunicipalityService
     private readonly IMongoDatabase _database;
     
     private readonly IMongoCollection<Booking> _bookings;
-    private readonly IMongoCollection<Chairman> _chairmen;
     private readonly IMongoCollection<Location> _locations;
     private readonly IMongoCollection<Member> _members;
     private readonly IMongoCollection<Municipality> _municipalities;
-    private readonly IMongoCollection<Room> _rooms;
     private readonly IMongoCollection<Society> _societies;
     private readonly IMongoCollection<KeyResponsible> _keyResponsible;
 
@@ -30,11 +28,9 @@ public class MunicipalityService
         DropDatabase();
 
         _bookings = _database.GetCollection<Booking>("Bookings");
-        _chairmen = _database.GetCollection<Chairman>("Chairmen");
         _locations = _database.GetCollection<Location>("Locations");
         _members = _database.GetCollection<Member>("Members");
         _municipalities = _database.GetCollection<Municipality>("Municipalities");
-        _rooms = _database.GetCollection<Room>("Rooms");
         _societies = _database.GetCollection<Society>("Societies");
         _keyResponsible = _database.GetCollection<KeyResponsible>("KeyResponsible");
     }
@@ -80,14 +76,30 @@ public class MunicipalityService
 			PersonalInformation = "cdrakes0@plala.or.jp"
 		};
 
-		var key1 = new Key
+		var key1 = new Location.Key
 		{
 			PickUpLocation = "Samsø"
 		};
 
-		var key2 = new Key
+		var key2 = new Location.Key
 		{
 			PickUpLocation = "Anholt"
+		};
+		
+		var auditorium = new Location.Room
+		{
+			AccessKey = 1283641,
+			Capacity = 150,
+			Properties = "tavler, projektor, microfon",
+			Name = "Auditorium"
+		};
+
+		var katrinebjerg = new Location.Room
+		{
+			AccessKey = 12823461,
+			Capacity = 30,
+			Properties = "kaffemaskine",
+			Name = "Kontor"
 		};
 
 		Console.WriteLine("Inserting Location");
@@ -100,7 +112,8 @@ public class MunicipalityService
 			Purpose = "Undervisning, Konfererencer",
 			Municipality = aarhus.Id,
 			Address = "Clematisvænget 92",
-			KeyId = new List<string> { key1.Id }
+			Keys = new List<Location.Key> { key1 },
+			Rooms = new List<Location.Room> { auditorium }
 		};
 
 		var fodboldBane = new Location
@@ -112,32 +125,11 @@ public class MunicipalityService
 			Purpose = "Fodbold, Græsplæne",
 			Municipality = aarhus.Id,
 			Address = "Hulemosevej 67",
-			KeyId = new List<string> { key2.Id }
+			Keys = new List<Location.Key> { key2 },
+			Rooms = new List<Location.Room> { katrinebjerg }
 		};
 
 		_locations.InsertMany(new List<Location> { au, fodboldBane });
-		
-		Console.WriteLine("Inserting Rooms");
-		var auditorium = new Room
-		{
-			AccessKey = 1283641,
-			Capacity = 150,
-			Properties = "tavler, projektor, microfon",
-			Name = "Auditorium",
-			Location = au.Id
-		};
-
-		var katrinebjerg = new Room
-		{
-			AccessKey = 12823461,
-			Capacity = 30,
-			Properties = "kaffemaskine",
-			Name = "Kontor",
-			Location = fodboldBane.Id
-		};
-
-		_rooms.InsertOne(auditorium);
-		_rooms.InsertOne(katrinebjerg);
 
 		Console.WriteLine("Inserting Members");
 		var lionel = new Member
@@ -238,22 +230,8 @@ public class MunicipalityService
 		    Console.WriteLine($"No locations found in {municipalityName}");
 		    return;
 	    }
-
-	    foreach (var location in locationsInMunicipality)
-	    {
-		    Console.WriteLine($"{location.Name}");
-	    }
-
-	    _rooms.Find(new BsonDocument()).ToList().ForEach(room =>
-	    {
-		    locationsInMunicipality.ForEach(location =>
-		    {
-			    if (location.Id == room.Location)
-			    {
-				    Console.WriteLine($"{room.Name} at address {location.Address}");
-			    }
-		    });
-	    });
+	    
+	    locationsInMunicipality.ForEach(l => l.WriteRoomAddresses());
     }
     
 }

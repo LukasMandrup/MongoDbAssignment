@@ -233,5 +233,21 @@ public class MunicipalityService
 	    
 	    locationsInMunicipality.ForEach(l => l.WriteRoomAddresses());
     }
+
+    public void QuerySocieties(string activity)
+    {
+	    Console.WriteLine("\nQuerying societies...\n");
+
+	    var societyFilter = Builders<Society>.Filter.Eq("Activity", activity);
+	    var societies = _societies.Find(societyFilter).ToList();
+	    
+	    if (societies == null)
+	    {
+		    Console.WriteLine($"Municipality {societies} not found");
+		    return;
+	    }
+	    
+	    societies.ForEach(l => l.WriteSociety());
+    }
     
 }

@@ -8,3 +8,4 @@ var service = new MunicipalityService();
 
 service.InsertDummyData();
 service.QueryMunicipalities("Aarhus");
+service.QuerySocieties("Fodbold");

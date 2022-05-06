@@ -249,5 +249,9 @@ public class MunicipalityService
 	    
 	    societies.ForEach(l => l.WriteSociety());
     }
-    
+
+    public void QueryKeyResponsible(KeyResponsible kr)
+    {
+	    
+    }
 }

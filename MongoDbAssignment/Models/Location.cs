@@ -18,8 +18,8 @@ namespace MongoDbAssignment.Models
 	    [BsonElement("Name")]
 	    public string Name { get; set; }
         
-	    [BsonElement("AccessKey")]
-	    public int AccessCode { get; set; }
+	    [BsonElement("AccessCode")]
+	    public int? AccessCode { get; set; }
 	    
 	    [BsonElement("Properties")]
 	    public string Properties { get; set; }
@@ -73,6 +73,15 @@ namespace MongoDbAssignment.Models
 	    public void WriteRoomAddresses()
 	    {
 		    Rooms.ForEach(r => Console.WriteLine($"{r.Name} at address {Address}"));
+	    }
+	    
+	    public string GetAccessInfo()
+	    {
+		    var keyString = "";
+		    Keys.ForEach(k => keyString += k.PickUpLocation + " ");
+		    return $"{Name} has " +
+		           (AccessCode == null ? "access code" : "Key")
+		           + $" {AccessCode.ToString() ?? keyString}";
 	    }
     }
 }

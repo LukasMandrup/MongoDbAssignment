@@ -22,13 +22,10 @@ namespace MongoDbAssignment.Models
 	    public int? AccessCode { get; set; }
 	    
 	    [BsonElement("Properties")]
-	    public string Properties { get; set; }
+	    public List<string> Properties { get; set; }
 	    
 	    [BsonElement("Purpose")]
 	    public string Purpose { get; set; }
-
-	    [BsonElement("KeyResponsible")]
-	    public IList<string> KeyResponsibleIds { get; set; }
 	    
 	    //Reference
 	    [BsonElement("Municipality")]
@@ -44,6 +41,13 @@ namespace MongoDbAssignment.Models
 	    public void WriteRoomAddresses()
 	    {
 		    Rooms.ForEach(r => Console.WriteLine($"{r.Name} at address {Address}"));
+	    }
+	    
+	    public string GetAccessInfo()
+	    {
+		    return $"{Name} has " +
+		           (AccessCode == null ? "access code" : "keys")
+		           + $" {AccessCode.ToString() ?? string.Join(", ", Keys)}";
 	    }
     }
     
@@ -74,5 +78,10 @@ namespace MongoDbAssignment.Models
 	
 	    [BsonElement("PickUpLocation")]
 	    public string PickUpLocation { get; set; }
+
+	    public override string ToString()
+	    {
+		    return $"Id: {Id} Pick-up Location: {PickUpLocation}";
+	    }
     }
 }

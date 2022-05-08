@@ -20,12 +20,12 @@ public class MunicipalityService
     private readonly IMongoCollection<Society> _societies;
     private readonly IMongoCollection<KeyResponsible> _keyResponsible;
 
-    public MunicipalityService()
+    public MunicipalityService(bool dropDatabase)
     {
         var client = new MongoClient(connectionString);
         _database = client.GetDatabase(municipalityDb);
 
-        DropDatabase();
+         if (dropDatabase) DropDatabase();
 
         _bookings = _database.GetCollection<Booking>("Bookings");
         _locations = _database.GetCollection<Location>("Locations");
@@ -33,6 +33,8 @@ public class MunicipalityService
         _municipalities = _database.GetCollection<Municipality>("Municipalities");
         _societies = _database.GetCollection<Society>("Societies");
         _keyResponsible = _database.GetCollection<KeyResponsible>("KeyResponsible");
+        
+        if (dropDatabase) InsertDummyData();
     }
 
     private void DropDatabase()
@@ -99,36 +101,7 @@ public class MunicipalityService
 			Properties = "kaffemaskine",
 			Name = "Kontor"
 		};
-
-		Console.WriteLine("Inserting Location");
-		var au = new Location
-		{
-			Name = "Aarhus Universitet",
-			Capacity = 50000,
-			AccessCode = 8102403,
-			Properties = "indedørs",
-			Purpose = "Undervisning, Konfererencer",
-			Municipality = aarhus.Id,
-			Address = "Clematisvænget 92",
-			Keys = new List<Key> { key1 },
-			Rooms = new List<Room> { auditorium }
-		};
-
-		var fodboldBane = new Location
-		{
-			Name = "Aarhus Fodboldbane",
-			Capacity = 500,
-			AccessCode = 1238581,
-			Properties = "udendørs, fodboldmål, fodbolde",
-			Purpose = "Fodbold, Græsplæne",
-			Municipality = aarhus.Id,
-			Address = "Hulemosevej 67",
-			Keys = new List<Key> { key2 },
-			Rooms = new List<Room> { katrinebjerg }
-		};
-
-		_locations.InsertMany(new List<Location> { au, fodboldBane });
-
+		
 		Console.WriteLine("Inserting Members");
 		var lionel = new Member
 		{
@@ -144,6 +117,45 @@ public class MunicipalityService
 
 		_members.InsertOne(lionel);
 		_members.InsertOne(rachel);
+		
+		Console.WriteLine("Inserting Location");
+		var au = new Location
+		{
+			Name = "Aarhus Universitet",
+			Capacity = 50000,
+			AccessCode = 8102403,
+			Properties = new List<string> {"indedørs"},
+			Purpose = "Undervisning, Konfererencer",
+			Municipality = aarhus.Id,
+			Address = "Clematisvænget 92",
+			Keys = new List<Key> { key1 },
+			Rooms = new List<Room> { auditorium }
+		};
+
+		var fodboldBane = new Location
+		{
+			Name = "Aarhus Fodboldbane",
+			Capacity = 500,
+			AccessCode = 1238581,
+			Properties = new List<string> {"udendørs", "fodboldmål", "fodbolde"},
+			Purpose = "Fodbold, Græsplæne",
+			Municipality = aarhus.Id,
+			Address = "Hulemosevej 67",
+			Keys = new List<Key> { key2 },
+			Rooms = new List<Room> { katrinebjerg }
+		};
+
+		_locations.InsertMany(new List<Location> { au, fodboldBane });
+		
+		Console.WriteLine("Inserting Key Responsible");
+		var kr1 = new KeyResponsible
+		{
+			Member = lionel.Id,
+			HomeAddress = "Messivej 10",
+			PhoneNumber = "1010101001",
+			PassportNumber = "0101010101-01",
+			LocationIds = new List<string> { au.Id }
+		};
 		
 		Console.WriteLine("Inserting Societies");
 		var fodbold = new Society
@@ -165,7 +177,8 @@ public class MunicipalityService
 			Chairman = kevin,
 			Name = "Kommunist Partiet",
 			Municipality = aarhus.Id,
-			Members = new List<string> { lionel.Id }
+			Members = new List<string> { lionel.Id },
+			KeyResponsible = kr1
 		};
 
 		_societies.InsertOne(fodbold);
@@ -202,17 +215,7 @@ public class MunicipalityService
 		_bookings.InsertOne(b2);
 		_bookings.InsertOne(b3);
 
-		Console.WriteLine("Inserting Key Responsible");
-		var kr1 = new KeyResponsible
-		{
-			Member = lionel.Id,
-			Society = fodbold.Id,
-			HomeAddress = "Messivej 10",
-			PhoneNumber = "1010101001",
-			PassportNumber = "0101010101-01"
-		};
-
-		_keyResponsible.InsertOne(kr1);
+		
 
 		Console.WriteLine("\nDone inserting");
     }
@@ -292,9 +295,40 @@ public class MunicipalityService
 	    }
     }
     
-    public void QueryKeyResponsible(KeyResponsible kr)
+    public void QueryKeyResponsible(string kr)
     {
+	    Console.WriteLine("\nQuerying key responsible... \n");
 	    
+	    var societyWithKr = _societies.Find(s => s.KeyResponsible != null 
+	                                              && s.KeyResponsible.Member == kr).FirstOrDefault();
+
+	    if (societyWithKr == null)
+	    {
+		    Console.WriteLine($"Could not find key responsible {kr}");
+		    return;
+	    }
+
+	    var bookings = _bookings.Find(b => b.Member == kr || b.Society == societyWithKr.Id).ToList();
+
+	    if (bookings == null)
+	    {
+		    Console.WriteLine($"{kr} has no active bookings");
+		    return;
+	    }
+
+	    var locationIds = new List<string>();
+	    
+	    bookings.ForEach(b =>
+	    {
+		    if (b.Location != null) locationIds.Add(b.Location);
+	    });
+
+	    var locationsFilter = Builders<Location>.Filter.In(l => l.Id, locationIds);
+	    var locations = _locations.Find(locationsFilter).ToList();
+
+	    bookings.ForEach(Console.WriteLine);
+	    Console.WriteLine("\nLocation access information: ");
+	    locations.ForEach(l => Console.WriteLine(l.GetAccessInfo()));
     }
     
 }

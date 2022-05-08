@@ -5,10 +5,6 @@ namespace MongoDbAssignment.Models;
 
 public class KeyResponsible
 {
-	[BsonId]
-	[BsonRepresentation(BsonType.ObjectId)]
-	public string Id { get; set; }
-	
 	[BsonElement("Member")]
 	public string? Member { get; set; }
 

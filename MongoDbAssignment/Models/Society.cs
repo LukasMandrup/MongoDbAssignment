@@ -31,7 +31,7 @@ namespace MongoDbAssignment.Models
 	    public IList<string> Members { get; set; }
 
 	    [BsonElement("KeyResponsible")]
-	    public int? KeyResponsible { get; set; }
+	    public KeyResponsible? KeyResponsible { get; set; }
 
 	    public void WriteSociety()
 	    {

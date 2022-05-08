@@ -8,3 +8,5 @@ var service = new MunicipalityService();
 
 service.InsertDummyData();
 service.QueryMunicipalities("Aarhus");
+service.QueryBookings();
+

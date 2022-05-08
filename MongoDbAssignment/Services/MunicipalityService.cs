@@ -40,11 +40,9 @@ public class MunicipalityService
 	    Console.WriteLine("Dropping database...\n");
 
 	    _database.DropCollection("Bookings");
-	    _database.DropCollection("Chairmen");
 	    _database.DropCollection("Locations");
 	    _database.DropCollection("Members");
 	    _database.DropCollection("Municipalities");
-	    _database.DropCollection("Rooms");
 	    _database.DropCollection("Societies");
 	    _database.DropCollection("KeyResponsible");
     }
@@ -76,17 +74,17 @@ public class MunicipalityService
 			PersonalInformation = "cdrakes0@plala.or.jp"
 		};
 
-		var key1 = new Location.Key
+		var key1 = new Key
 		{
 			PickUpLocation = "Samsø"
 		};
 
-		var key2 = new Location.Key
+		var key2 = new Key
 		{
 			PickUpLocation = "Anholt"
 		};
 		
-		var auditorium = new Location.Room
+		var auditorium = new Room
 		{
 			AccessKey = 1283641,
 			Capacity = 150,
@@ -94,7 +92,7 @@ public class MunicipalityService
 			Name = "Auditorium"
 		};
 
-		var katrinebjerg = new Location.Room
+		var katrinebjerg = new Room
 		{
 			AccessKey = 12823461,
 			Capacity = 30,
@@ -112,8 +110,8 @@ public class MunicipalityService
 			Purpose = "Undervisning, Konfererencer",
 			Municipality = aarhus.Id,
 			Address = "Clematisvænget 92",
-			Keys = new List<Location.Key> { key1 },
-			Rooms = new List<Location.Room> { auditorium }
+			Keys = new List<Key> { key1 },
+			Rooms = new List<Room> { auditorium }
 		};
 
 		var fodboldBane = new Location
@@ -125,8 +123,8 @@ public class MunicipalityService
 			Purpose = "Fodbold, Græsplæne",
 			Municipality = aarhus.Id,
 			Address = "Hulemosevej 67",
-			Keys = new List<Location.Key> { key2 },
-			Rooms = new List<Location.Room> { katrinebjerg }
+			Keys = new List<Key> { key2 },
+			Rooms = new List<Room> { katrinebjerg }
 		};
 
 		_locations.InsertMany(new List<Location> { au, fodboldBane });
@@ -179,10 +177,20 @@ public class MunicipalityService
 			StartTime = DateTime.Now,
 			EndTime = DateTime.Now.Add(TimeSpan.FromHours(2)),
 			Member = lionel.Id,
-			Room = katrinebjerg.Id
+			Room = auditorium.Name,
+			Location = au.Id
+		};
+		
+		var b2 = new Booking
+		{
+			StartTime = DateTime.Now.Add(TimeSpan.FromHours(2)),
+			EndTime = DateTime.Now.Add(TimeSpan.FromHours(4)),
+			Society = kommunistPartiet.Id,
+			Room = auditorium.Name,
+			Location = au.Id
 		};
 
-		var b2 = new Booking
+		var b3 = new Booking
 		{
 			StartTime = DateTime.Now.Add(TimeSpan.FromHours(2)),
 			EndTime = DateTime.Now.Add(TimeSpan.FromHours(4)),
@@ -192,6 +200,7 @@ public class MunicipalityService
 
 		_bookings.InsertOne(b1);
 		_bookings.InsertOne(b2);
+		_bookings.InsertOne(b3);
 
 		Console.WriteLine("Inserting Key Responsible");
 		var kr1 = new KeyResponsible
@@ -232,6 +241,70 @@ public class MunicipalityService
 	    }
 	    
 	    locationsInMunicipality.ForEach(l => l.WriteRoomAddresses());
+    }
+
+    public void QueryBookings()
+    {
+	    Console.WriteLine("\nQuerying bookings...\n");
+
+	    var bookingsFilter = Builders<Booking>.Filter.Ne(b => b.Room, null);
+	    var roomBookings = _bookings.Find(bookingsFilter).ToList();
+	    
+	    if (!roomBookings.Any())
+	    {
+		    Console.WriteLine("No bookings found");
+		    return;
+	    }
+
+	    for (var booking = 0; booking < roomBookings.Count; booking++)
+	    {
+		    var location = _locations.Find(l => l.Id == roomBookings[booking].Location).FirstOrDefault();
+		    var society = _societies.Find(s => s.Id == roomBookings[booking].Society).FirstOrDefault();
+
+		    var outputString = $"Booking {booking + 1}: Room {roomBookings[booking].Room} ";
+
+		    outputString += location != null ? $"at {location.Address} " : " at unknown location ";
+		    outputString += society != null ? $"booked by {society.Name} " +
+		                                      "with chairman " +
+		                                      $"{society?.Chairman.FirstName + " " + society?.Chairman.LastName} " 
+			    : "booked by an unknown organization ";
+
+		    outputString += $"starting at {roomBookings[booking].StartTime} " +
+		                    $"and ending at {roomBookings[booking].EndTime}";
+		    
+		    Console.WriteLine(outputString);
+	    }
+
+
+
+
+	    /*
+	     *
+	     * var bookedRooms = new List<BookedRoomsDTO>();
+
+	var bookings = db.Bookings
+		.Include(b => b.Society)
+		.Include(b => b.Location)
+		.Include(b => b.Room)
+		.ThenInclude(r => r.Location)
+		.ToList();
+
+
+	bookings.ForEach(booking =>
+	{
+		bookedRooms.Add(new BookedRoomsDTO
+		{
+			RoomName = booking.Room?.Name,
+			Location = booking.Location ?? booking.Room?.Location,
+			SocietyName = booking.Society?.Name,
+			Chairman = booking.Society?.Chairman,
+			StartTime = booking.StartTime,
+			EndTime = booking.EndTime
+		});
+	});
+
+	return bookedRooms;
+	     */
     }
     
 }

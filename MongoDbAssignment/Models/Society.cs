@@ -33,7 +33,9 @@ namespace MongoDbAssignment.Models
 	    [BsonElement("KeyResponsible")]
 	    public int? KeyResponsible { get; set; }
 
-	    [BsonElement("ChairmanId")]
-	    public int ChairmanId { get; set; }
+	    public void WriteSociety()
+	    {
+		    Console.WriteLine($"{Name} with cvr {CVR} on address {Address} with chairman {Chairman.FirstName} {Chairman.LastName}");
+	    }
     }
 }

@@ -18,8 +18,8 @@ namespace MongoDbAssignment.Models
 	    [BsonElement("Name")]
 	    public string Name { get; set; }
         
-	    [BsonElement("AccessKey")]
-	    public int AccessCode { get; set; }
+	    [BsonElement("AccessCode")]
+	    public int? AccessCode { get; set; }
 	    
 	    [BsonElement("Properties")]
 	    public string Properties { get; set; }

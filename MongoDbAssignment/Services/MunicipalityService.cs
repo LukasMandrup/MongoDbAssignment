@@ -242,6 +242,22 @@ public class MunicipalityService
 	    
 	    locationsInMunicipality.ForEach(l => l.WriteRoomAddresses());
     }
+    
+    public void QuerySocieties(string activity)
+    {
+	    Console.WriteLine("\nQuerying societies...\n");
+
+	    var societyFilter = Builders<Society>.Filter.Eq("Activity", activity);
+	    var societies = _societies.Find(societyFilter).ToList();
+	    
+	    if (societies == null)
+	    {
+		    Console.WriteLine($"Municipality {societies} not found");
+		    return;
+	    }
+	    
+	    societies.ForEach(l => l.WriteSociety());
+    }
 
     public void QueryBookings()
     {
@@ -274,37 +290,11 @@ public class MunicipalityService
 		    
 		    Console.WriteLine(outputString);
 	    }
-
-
-
-
-	    /*
-	     *
-	     * var bookedRooms = new List<BookedRoomsDTO>();
-
-	var bookings = db.Bookings
-		.Include(b => b.Society)
-		.Include(b => b.Location)
-		.Include(b => b.Room)
-		.ThenInclude(r => r.Location)
-		.ToList();
-
-
-	bookings.ForEach(booking =>
-	{
-		bookedRooms.Add(new BookedRoomsDTO
-		{
-			RoomName = booking.Room?.Name,
-			Location = booking.Location ?? booking.Room?.Location,
-			SocietyName = booking.Society?.Name,
-			Chairman = booking.Society?.Chairman,
-			StartTime = booking.StartTime,
-			EndTime = booking.EndTime
-		});
-	});
-
-	return bookedRooms;
-	     */
+    }
+    
+    public void QueryKeyResponsible(KeyResponsible kr)
+    {
+	    
     }
     
 }
